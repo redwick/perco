@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+home,body{
+  margin: 0;
+  font-family: MontserratAlternates-Regular sans-serif;
+}
+textarea{
+  font-family: MontserratAlternates-Regular sans-serif;
+}
+.df{
+  display: flex;
+}
+.cx{
+  display: flex;
+  justify-content: center;
+}
+.cy{
+  display: flex;
+  align-items: center;
+}
+.cxy{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pr{
+  position: relative;
+}
+.pl-1{
+  padding-left: 1vw;
+}
+.pl-2{
+  padding-left: 2vw;
+}
+.mt-1{
+  padding-top: 1vw;
+}

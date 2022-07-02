@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ImageComment} from "./interfaces/image-comment";
 import {ImageGallery} from "./interfaces/image-gallery";
+import {repeatWhen, Subject, takeUntil, timer} from "rxjs";
 
 
 @Component({
@@ -21,15 +22,27 @@ export class AppComponent implements OnInit{
   showThumbnailArrows = false;
   commentText: string = '';
   comments: ImageComment[] = [];
+  _stop = new Subject<void>();
+  _start = new Subject<void>();
+  timerStartDelay = 3000;
+  timerDuration = 3000;
   ngOnInit(): void {
     for (let x = 1; x <= 10; x++){
       this.gallery.push({full: `assets/pics/full/${x}.jpg`, thumb: `assets/pics/thumb/${x}.jpg`, preview: `assets/pics/preview/${x}.jpg`, liked: false});
     }
     this.thumbnailImages = this.gallery.slice(this.currentStep, this.imagesPerStep);
     this.selectedImage = this.thumbnailImages[0];
+    timer(this.timerStartDelay, this.timerDuration).pipe(takeUntil(this._stop), repeatWhen(() => this._start)).subscribe(() => {
+      this.movePreviewImage(1);
+    });
+  }
+  restartAutoMoving(){
+    this._stop.next();
+    this._start.next();
   }
 
   selectImage(img: ImageGallery) {
+    this.restartAutoMoving();
     this.selectedImage = img;
   }
 
@@ -44,7 +57,7 @@ export class AppComponent implements OnInit{
     this.thumbnailImages = this.gallery.slice(this.currentStep, this.currentStep + this.imagesPerStep);
   }
 
-  movePreviewImage(number: number) {
+  movePreviewImage(number: number, restartAutoMoving: boolean = false) {
     let newIndex = (this.gallery.indexOf(this.selectedImage) + number + this.gallery.length) % this.gallery.length;
     this.selectedImage = this.gallery[newIndex];
     if (newIndex == 0){
@@ -60,6 +73,9 @@ export class AppComponent implements OnInit{
     }
     else if (newIndex > this.currentStep + this.imagesPerStep - 1){
       this.moveThumbnailImages(1);
+    }
+    if (restartAutoMoving){
+      this.restartAutoMoving();
     }
   }
 
@@ -108,5 +124,15 @@ export class AppComponent implements OnInit{
 
   likeToggle(img: ImageGallery) {
     img.liked = !img.liked;
+  }
+
+  openLightBox() {
+    this._stop.next();
+    this.showLightbox = true
+  }
+
+  closeLightBox() {
+    this._start.next();
+    this.showLightbox = false;
   }
 }

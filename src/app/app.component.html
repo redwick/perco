@@ -1,11 +1,11 @@
 <div class="page cxy">
   <div class="gallery">
     <div class="df pr" (mouseenter)="showPreviewArrows = true" (mouseleave)="showPreviewArrows = false">
-      <div [class.preview-arrow-visible]="showPreviewArrows" class="preview-arrow left-preview-arrow cxy arrow-circle" (click)="movePreviewImage(-1)">
+      <div [class.preview-arrow-visible]="showPreviewArrows" class="preview-arrow left-preview-arrow cxy arrow-circle" (click)="movePreviewImage(-1, true)">
         <img class="arrow-image" src="assets/icons/left-arrow.svg">
       </div>
-      <img class="preview-image" [src]="selectedImage.preview" (click)="showLightbox = true">
-      <div [class.preview-arrow-visible]="showPreviewArrows" class="preview-arrow right-preview-arrow cxy arrow-circle" (click)="movePreviewImage(1)">
+      <img class="preview-image" [src]="selectedImage.preview" (click)="openLightBox()">
+      <div [class.preview-arrow-visible]="showPreviewArrows" class="preview-arrow right-preview-arrow cxy arrow-circle" (click)="movePreviewImage(1, true)">
         <img class="arrow-image" src="assets/icons/right-arrow.svg">
       </div>
       <div class="preview-image-counter">{{gallery.indexOf(selectedImage) + 1}} of {{gallery.length}}</div>
@@ -29,11 +29,11 @@
 </div>
 
 <div class="cxy" *ngIf="showLightbox">
-  <div class="lightbox-overlay" (click)="showLightbox = false"></div>
+  <div class="lightbox-overlay" (click)="closeLightBox()"></div>
   <div class="lightbox-content df">
     <img class="lightbox-image" [src]="selectedImage.full">
     <div class="lightbox-messages">
-      <div class="exit-lightbox" (click)="showLightbox = false">
+      <div class="exit-lightbox" (click)="closeLightBox()">
         <img src="assets/icons/close.svg">
       </div>
       <div class="df">
